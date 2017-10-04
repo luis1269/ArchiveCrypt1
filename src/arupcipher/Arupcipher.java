@@ -46,7 +46,7 @@ public class Arupcipher {
         
         for(i=2; i < primeNumberArray.length; i++){
             if(primeNumberArray[i]){
-               System.out.println("prime " + i); 
+               //System.out.println("prime " + i); 
             }
         }
         

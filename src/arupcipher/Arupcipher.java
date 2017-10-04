@@ -15,7 +15,6 @@ public class Arupcipher {
         number of the prime
     */
     public static boolean [] calculateSOE(){
-        
         int i, j, k;
         int numberOfPrimes = 1000000;
         boolean primeNumberArray []= new boolean[numberOfPrimes];
@@ -50,6 +49,8 @@ public class Arupcipher {
                System.out.println("prime " + i); 
             }
         }
+        
+        System.out.println("This is from Luis!");
     }//End of Main
     
 }//End of Class arupcipher

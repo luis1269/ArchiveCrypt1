@@ -69,7 +69,7 @@ public class Arupcipher {
     public static String encryptPlaintext(char keyOne [][], int keyPrime, char plaintext[]){
         int i , j, k, counter = 0; 
         String tempCipherText = "";
-        int[] iCipherText = new int [plaintext.length * 2];
+        int[] iCipherText = new int [plaintext.length * 2]; //Intermediate CipherText
         
         //Start loop to encrypt each letter
         //Rotate the box after encrypting each letter

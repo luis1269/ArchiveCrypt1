@@ -24,7 +24,7 @@ public class Arupcipher {
         The sequence of prime numbers is then placed into an array for indexing
     */
     public static void calculateSOE(){
-        int i, j, k, counter1 = 0, counter2 = 0;
+        int i, j, k, counter1 = 0;
         int numberOfPrimes = 2000000;
         boolean primeNumberArray []= new boolean[numberOfPrimes];
         
@@ -53,7 +53,7 @@ public class Arupcipher {
         }
         System.out.println("Primes are: " + counter1);
         for(i = 0; i < primeNumbersArray.length; i ++){
-            System.out.println(primeNumbersArray[i]);
+            //System.out.println(primeNumbersArray[i]);
             if(primeNumbersArray[i] == 0)
                 break;
         }
@@ -89,16 +89,25 @@ public class Arupcipher {
             
             //Rotate the box
             keyOne = rotateBox(keyOne, i);
-            //System.out.println("new box is");
+            /*System.out.println("new box is");
             for(j = 0; j < 8; j++){
                 for(k = 0; k < 8; k++){
                     //System.out.print(keyOne[j][k]);
                 }
                 //System.out.println();
-            }
+            }*/
         }
+
+        //Use keyPrime to generate a sequence of prime numbers 
+        int sequence [] = new int [plaintext.length * 2];
+        sequence = generatePrimeSequence(keyPrime, plaintext.length);
         
-        //Use primeKey to generate a sequence of prime numbers 
+        //Calculate base 8 digits of the ciphertext
+        int [] baseEightCipher = new int [plaintext.length * 2];
+        for(i = 0; i < plaintext.length * 2; i ++){
+            baseEightCipher[i] = (iCipherText[i] + sequence[i]) % 8;
+            System.out.println(i + "  " + iCipherText[i] + " + " + sequence[i] + " %8 = " + baseEightCipher[i]);
+        }
         
         
         return tempCipherText;
@@ -137,6 +146,42 @@ public class Arupcipher {
 
         return keyOne;
     }//End of method rotateBox
+    
+    /*
+        This method is used to generate a sequence of numbers from the prime numbers
+    */
+    public static int[] generatePrimeSequence(int keyPrime, int plaintextLength){
+        int [] tmpPrimeSequence = new int [(plaintextLength * 2) + 1];
+        int i, counter = 0;
+        
+        //Iterate through primeNumbersArray to find the startingpoint
+        int startingPNumberLocation = 0;
+        for(i = 0; i < primeNumbersArray.length; i++){
+            //System.out.println("PrimeNumbers Array " + primeNumbersArray[j] + "  keyPrime " + keyPrime);
+            if(primeNumbersArray[i] > keyPrime){
+                startingPNumberLocation = i;
+                break;
+            }
+            else{
+                startingPNumberLocation = i;
+            }
+                
+        }
+        System.out.println("starting prime location is " + startingPNumberLocation + " number is " 
+                            + primeNumbersArray[startingPNumberLocation]);
+        System.out.println("number of characters is " + ((plaintextLength * 2)) );
+        
+        //Create a sequence of numbers by the subtracting the higher prime number from its predecessor
+        //And dividing that by 2
+        for (i = startingPNumberLocation;i < startingPNumberLocation + plaintextLength * 2; i++){
+            
+            tmpPrimeSequence[counter] = (primeNumbersArray[i+1] - primeNumbersArray[i]) / 2;
+            System.out.println(primeNumbersArray[i+1] + " - " + primeNumbersArray[i] + " = " + tmpPrimeSequence[counter] );
+            counter ++;
+        }
+                        
+        return tmpPrimeSequence;
+    }//End of method generatePrimeSequence
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
         int i;
@@ -214,8 +259,6 @@ public class Arupcipher {
             outputFile.write("\n");
             
         }//End of outer loop
-        
-        System.out.println("This is from Luis!");
         
         //Close the input and output files
         inputFile.close();

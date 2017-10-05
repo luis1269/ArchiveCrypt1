@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Scanner;
 
 /**
@@ -16,6 +17,7 @@ import java.util.Scanner;
  */
 public class Arupcipher {
     private static final int[] primeNumbersArray = new int[2000000];
+    private static final String base64Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     
     /*  
         This calculates the prime numbers up to numberOfPrimes using the Sieve of Eranthoses
@@ -106,9 +108,23 @@ public class Arupcipher {
         int [] baseEightCipher = new int [plaintext.length * 2];
         for(i = 0; i < plaintext.length * 2; i ++){
             baseEightCipher[i] = (iCipherText[i] + sequence[i]) % 8;
-            System.out.println(i + "  " + iCipherText[i] + " + " + sequence[i] + " %8 = " + baseEightCipher[i]);
+            //System.out.println(i + "  " + iCipherText[i] + " + " + sequence[i] + " %8 = " + baseEightCipher[i]);
         }
         
+        //Change baseEightCipher to base 10
+        int [] baseTenCipher = new int [plaintext.length];
+        for(i = 0; i < plaintext.length; i++){
+            baseTenCipher[i] = ( (8 * baseEightCipher[(2 * i)]) + baseEightCipher[(2 * i) + 1] );
+            System.out.println(i + "  " + (8 * baseEightCipher[(2 * i)]) + " + " + baseEightCipher[(2 * i) + 1] + " = " + baseTenCipher[i]);
+        }
+        
+        //Change baseTenCipher to radix-64 characters
+        char radixCharacter;
+        
+        for(i = 0; i < baseTenCipher.length; i++){
+            radixCharacter = base64Characters.charAt(baseTenCipher[i]);
+            tempCipherText = tempCipherText + radixCharacter;
+        }
         
         return tempCipherText;
     }//End of method encryptPlaintext
@@ -176,7 +192,7 @@ public class Arupcipher {
         for (i = startingPNumberLocation;i < startingPNumberLocation + plaintextLength * 2; i++){
             
             tmpPrimeSequence[counter] = (primeNumbersArray[i+1] - primeNumbersArray[i]) / 2;
-            System.out.println(primeNumbersArray[i+1] + " - " + primeNumbersArray[i] + " = " + tmpPrimeSequence[counter] );
+            //System.out.println(primeNumbersArray[i+1] + " - " + primeNumbersArray[i] + " = " + tmpPrimeSequence[counter] );
             counter ++;
         }
                         

@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+
 /**
  *
  * @author Luis
@@ -68,7 +69,7 @@ public class Arupcipher {
     */
     
     public static String encryptPlaintext(char keyOne [][], int keyPrime, char plaintext[]){
-        int i , j, k, counter = 0; 
+        int i , j, k, charFound = 0, counter = 0; 
         String tempCipherText = "";
         int[] iCipherText = new int [plaintext.length * 2]; //Intermediate CipherText
         
@@ -78,25 +79,34 @@ public class Arupcipher {
             
             //Traverse keyOne and find a matching letter
             //J is the row, K is the column
-            for(j = 0; j < 8; j++){
+            //System.out.println("Lookin for " + plaintext[i]);
+             for(j = 0; j < 8; j++){
+                 if(charFound == 1)
+                     break;
                 for(k = 0; k < 8; k++){
                     if(plaintext[i] == keyOne[j][k]){
                         iCipherText[counter] = j;
                         iCipherText[counter + 1] = k;
                         counter = counter + 2;
+                        charFound = 1;
+                        break;
                     }
                 }
             }
+            
+            //Reset charFound flag to 0 
+            charFound = 0; 
             
             //Rotate the box
             keyOne = rotateBox(keyOne, i);
             /*System.out.println("new box is");
             for(j = 0; j < 8; j++){
                 for(k = 0; k < 8; k++){
-                    //System.out.print(keyOne[j][k]);
+                    System.out.print(keyOne[j][k]);
                 }
-                //System.out.println();
-            }*/
+                System.out.println();
+            }
+            System.out.println();*/
         }
 
         //Use keyPrime to generate a sequence of prime numbers 
@@ -125,7 +135,7 @@ public class Arupcipher {
             tempCipherText = tempCipherText + radixCharacter;
         }
         
-        return tempCipherText;
+         return tempCipherText;
     }//End of method encryptPlaintext
     
     /*
@@ -205,6 +215,7 @@ public class Arupcipher {
         
         // Read in data from file
         Scanner stdInput = new Scanner(System.in);
+        
         char[][] keyMatrix = new char[8][8];
         String tmpInputString = new String();
         int j, numOfEncrypt = 0;
@@ -239,9 +250,11 @@ public class Arupcipher {
 
             //Read in 8x8 matrix for the input key
             for(i = 0; i < 8; i++){
+                tmpInputString = inputFile.next();
+
                 for(j = 0; j < 8; j++){
-                   tmpInputString = inputFile.next();
-                   keyMatrix[i][j] = tmpInputString.charAt(0);
+                   
+                   keyMatrix[i][j] = tmpInputString.charAt(j);
                    //System.out.print(keyMatrix[i][j]);
                 }
                 //System.out.println();
@@ -251,15 +264,15 @@ public class Arupcipher {
             int keyPrime;
             tmpInputString = inputFile.next();
             keyPrime = Integer.parseInt(tmpInputString);
-            //System.out.println("prime is " + keyPrime);
+            System.out.println("prime is " + keyPrime);
             
             //Read in plaintext from file
             tmpInputString = inputFile.next();
             char plaintext[] = new char[tmpInputString.length()];
             plaintext = tmpInputString.toCharArray();
-            /*for(i = 0; i < tmpInputString.length(); i++)
+            for(i = 0; i < tmpInputString.length(); i++)
                 System.out.print(plaintext[i]);
-            System.out.println();*/
+            System.out.println();
             
             // Encrypt the plaintext and return a string with the encrypted plaintext
             String cipherText = "";
@@ -271,7 +284,7 @@ public class Arupcipher {
                 outputFile.write(cipherText.charAt(i));
             }
             
-            outputFile.write("\n");
+            outputFile.newLine();
             
         }//End of outer loop
         
